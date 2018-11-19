@@ -28,7 +28,7 @@ import javax.swing.JPanel;public class Board {
 			//panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			
 			
-			Image blockboyj = ImageIO.read(getClass().getResource("black.png"));
+			Image black_pawn = ImageIO.read(getClass().getResource("black.png"));
 			Image red = ImageIO.read(getClass().getResource("red.png"));
 			
 			for(int i=0;i<8;i++) {
@@ -48,9 +48,9 @@ import javax.swing.JPanel;public class Board {
 					}
 					button.setMargin(new Insets(0,0,0,0));
 					button.setBorder(null);
-					if(i < 2) button.setIcon(new ImageIcon(blockboyj));
+					if(i < 2) button.setIcon(new ImageIcon(black_pawn));
 					else if (i>=6) button.setIcon(new ImageIcon(red));
-					//button.setName("B"+Integer.toString((i))+Integer.toString((j)));
+					
 					lb.add(button);
 					panel.add(button);
 					
