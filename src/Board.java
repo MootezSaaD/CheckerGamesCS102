@@ -3,6 +3,7 @@ import java.awt.ComponentOrientation;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.List;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ import javax.swing.JPanel;public class Board {
 			Color black = Color.BLACK;
 			Color temp =black;
 			ArrayList<String> al = new ArrayList<>();
-			
+			ArrayList<JButton> lb = new ArrayList<JButton>();
 			
 			
 			//panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -34,6 +35,7 @@ import javax.swing.JPanel;public class Board {
 				if (i%2==0) temp = black;
 				else temp = white;
 				for (int j=0;j<8;j++) {
+					//JButton m = "B"+Integer.toString((i))+Integer.toString((j));
 					button = new JButton();
 					if (temp==black) {
 						button.setBackground(temp);
@@ -48,7 +50,8 @@ import javax.swing.JPanel;public class Board {
 					button.setBorder(null);
 					if(i < 2) button.setIcon(new ImageIcon(blockboyj));
 					else if (i>=6) button.setIcon(new ImageIcon(red));
-					button.setName("B"+Integer.toString((i))+Integer.toString((j)));
+					//button.setName("B"+Integer.toString((i))+Integer.toString((j)));
+					lb.add(button);
 					panel.add(button);
 					
 					al.add(button.getName());
@@ -56,9 +59,12 @@ import javax.swing.JPanel;public class Board {
 				}
 			}
 			
-			for(int i=0;i<al.size();i++) {
-				System.out.println(al.get(i));
-			}
+		
+			lb.get(46).setIcon(new ImageIcon(red));
+			lb.get(55).setIcon(null);
+			
+			lb.get(43).setIcon(new ImageIcon(red));
+			lb.get(50).setIcon(null);
 			
 			frame.add(panel);
 			frame.setTitle("Checkers Board");
