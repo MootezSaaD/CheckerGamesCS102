@@ -20,7 +20,7 @@ import javax.swing.JPanel;public class Board {
 			Color white = Color.WHITE;
 			Color black = Color.BLACK;
 			Color temp =black;
-			ArrayList<Point> al = new ArrayList<>();
+			ArrayList<String> al = new ArrayList<>();
 			
 			
 			
@@ -34,7 +34,7 @@ import javax.swing.JPanel;public class Board {
 				if (i%2==0) temp = black;
 				else temp = white;
 				for (int j=0;j<8;j++) {
-					button = new JButton("");
+					button = new JButton();
 					if (temp==black) {
 						button.setBackground(temp);
 						
@@ -46,13 +46,18 @@ import javax.swing.JPanel;public class Board {
 					}
 					button.setMargin(new Insets(0,0,0,0));
 					button.setBorder(null);
+					if(i < 2) button.setIcon(new ImageIcon(blockboyj));
+					else if (i>=6) button.setIcon(new ImageIcon(red));
+					button.setName("B"+Integer.toString((i))+Integer.toString((j)));
 					panel.add(button);
-					al.add(button.getLocation());
+					
+					al.add(button.getName());
 					
 				}
 			}
+			
 			for(int i=0;i<al.size();i++) {
-				System.out.println(al.get(i).toString());
+				System.out.println(al.get(i));
 			}
 			
 			frame.add(panel);
