@@ -1,77 +1,164 @@
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.List;
-import java.awt.Point;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;public class Board {
-	
-	
-		public void gui() throws Exception {
-			JButton button;
-			JFrame frame = new JFrame();
-			JPanel panel = new JPanel();
-			Color white = Color.WHITE;
-			Color black = Color.BLACK;
-			Color temp =black;
-			ArrayList<String> al = new ArrayList<>();
-			ArrayList<JButton> lb = new ArrayList<JButton>();
-			
-			
-			//panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-			
-			
-			Image black_pawn = ImageIO.read(getClass().getResource("black.png"));
-			Image red = ImageIO.read(getClass().getResource("red.png"));
-			
-			for(int i=0;i<8;i++) {
-				if (i%2==0) temp = black;
-				else temp = white;
-				for (int j=0;j<8;j++) {
-					//JButton m = "B"+Integer.toString((i))+Integer.toString((j));
-					button = new JButton();
-					if (temp==black) {
-						button.setBackground(temp);
-						
-						temp = white;
-					}
-					else {
-						button.setBackground(temp);
-						temp = black;
-					}
-					button.setMargin(new Insets(0,0,0,0));
-					button.setBorder(null);
-					if(i < 2) button.setIcon(new ImageIcon(black_pawn));
-					else if (i>=6) button.setIcon(new ImageIcon(red));
-					
-					lb.add(button);
-					panel.add(button);
-					
-					al.add(button.getName());
-					
+import javax.swing.JPanel;
+
+public class Board extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final int size=9;
+
+	private Tile activeTile;
+
+	private boolean blackTurn;
+
+	public Board(int size){
+		blackTurn=false;
+		setLayout(new GridLayout(size, size));
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				if((j%2==0 && i%2==0) || (j%2!=0 && i%2!=0)){
+					addTile(OurColor.BLACK);
+				}
+				else{
+					addTile(OurColor.WHITE);
 				}
 			}
-			
-		
-			lb.get(46).setIcon(new ImageIcon(red));
-			lb.get(55).setIcon(null);
-			
-			lb.get(43).setIcon(new ImageIcon(red));
-			lb.get(50).setIcon(null);
-			
-			frame.add(panel);
-			frame.setTitle("Checkers Board");
-			frame.setSize(800, 800);
-			panel.setLayout(new GridLayout(8,8));
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
-		
+		init();
+	}
+
+	private void addTile(OurColor color){
+		Tile tile1 = new Tile(color);
+		tile1.addMouseListener(new TileListener(tile1, this));
+		add(tile1);
+	}
+
+	private Pawn createPawn(OurColor color, boolean goUp){
+		Pawn pawn = new Pawn(color, goUp);
+		pawn.addMouseListener(new PawnListener(pawn, this));
+		return pawn;
+	}
+
+	private void init(){
+		for(int j=0; j<size*3; j+=2){
+			getTile(j).add(createPawn(OurColor.BLACK, false));
+			getTile(size*size-j-1).add(createPawn(OurColor.WHITE, true));
+		}
+	}
+
+	public Tile getTile(int i, int j){
+		return (Tile) getComponent(j+i*size);
+	}
+
+	public Tile getTile(int i){
+		return (Tile) getComponent(i);
+	}
+
+	
+	public void showPossibilities(Pawn p){
+		if((p.getColor().equals(OurColor.BLACK) && blackTurn) || (p.getColor().equals(OurColor.WHITE) && !blackTurn)){
+			int i=0;
+			int j=0;
+			for(int k=0; k<size*size; k++){
+				getTile(k).setSelected(false);
+				if(getTile(k).getComponentCount()!=0 && getTile(k).getComponent(0).equals(p)){
+					activeTile=getTile(k);
+					i=k/size;
+					j=k%size;
+
+				}
+			}
+			selectedTile(i, j, p.getColor());
+		}
+	}
+
+	public void selectedTile(int i, int j, OurColor color){
+		Pawn pion = (Pawn)(getTile(i, j).getComponent(0));
+		if(pion.isUp()){
+			if(i-1>=0 && j-1>=0 && getTile(i-1, j-1).getComponentCount()==0){
+				getTile(i-1, j-1).setSelected(true);
+			}
+			else if(i-2>=0 && j-2>=0 && getTile(i-2, j-2).getComponentCount()==0 && !((Pawn)(getTile(i-1, j-1).getComponent(0))).getColor().equals(color)){
+				getTile(i-2, j-2).setSelected(true);
+			}
+			if(i-1>=0 && j+1<size && getTile(i-1, j+1).getComponentCount()==0){
+				getTile(i-1, j+1).setSelected(true);
+			}
+			else if(i-2>=0 && j+2<size && getTile(i-2, j+2).getComponentCount()==0 && !((Pawn)(getTile(i-1, j+1).getComponent(0))).getColor().equals(color)){
+				getTile(i-2, j+2).setSelected(true);
+			}
+		}
+		else{
+			if(i+1<size && j+1<size && getTile(i+1, j+1).getComponentCount()==0){
+				getTile(i+1, j+1).setSelected(true);
+			}
+			else if(i+2<size && j+2<size && getTile(i+2, j+2).getComponentCount()==0 && !((Pawn)(getTile(i+1, j+1).getComponent(0))).getColor().equals(color)){
+				getTile(i+2, j+2).setSelected(true);
+			}
+			if(i+1<size && j-1>=0 && getTile(i+1, j-1).getComponentCount()==0){
+				getTile(i+1, j-1).setSelected(true);
+			}
+			else if(i+2<size && j-2>=0 && getTile(i+2, j-2).getComponentCount()==0 && !((Pawn)(getTile(i+1, j-1).getComponent(0))).getColor().equals(color)){
+				getTile(i+2, j-2).setSelected(true);
+			}
+			
+		}
+	}
+
+	public void move(Tile tile1){
+		tile1.add(activeTile.getComponent(0));
+		for(int k=0; k<size*size; k++){
+			getTile(k).setSelected(false);
+		}
+		if(Math.abs(getLine(tile1)-getLine(activeTile))==2){
+			int i = (getLine(tile1)+getLine(activeTile))/2;
+			int j = (getColonne(tile1)+getColonne(activeTile))/2;
+			getTile(i, j).removeAll();
+			getTile(i, j).validate();
+			getTile(i, j).repaint();
+		}
+		blackTurn=!blackTurn;
+		activeTile.removeAll();
+		activeTile.repaint();
+		activeTile=null;
+		tile1.repaint();
+		if(getLine(tile1)==0){
+			Pawn p=(Pawn)(tile1.getComponent(0));
+			p.setUp(false);
+		}
+		if(getLine(tile1)==size-1){
+			Pawn p=(Pawn)(tile1.getComponent(0));
+			p.setUp(true);
+		}
+	}
+
+	private int getLine(Tile tile1){
+		int res=0;
+		for(int i=0; i<size*size; i+=2){
+			if(getTile(i).equals(tile1)){
+				res=i/size;
+			}
+		}
+		return res;
+	}
+
+	private int getColonne(Tile tile1){
+		int res=0;
+		for(int i=0; i<size*size; i+=2){
+			if(getTile(i).equals(tile1)){
+				res=i%size;
+			}
+		}
+		return res;
+	}
+	
+	
+
+
 }
+
+
