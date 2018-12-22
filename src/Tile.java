@@ -10,7 +10,6 @@ import javax.swing.JPanel;
  
 public class Tile extends JPanel {
    
-    private static final long serialVersionUID = -1839026893240660968L;
    
     private OurColor color;
     private boolean selected;
@@ -33,7 +32,7 @@ public class Tile extends JPanel {
         this.selected = selected;
         if(selected){
             setBackground(Color.BLUE);
-            setForeground(Color.LIGHT_GRAY);
+        //    setForeground(Color.LIGHT_GRAY);
         }
         else {
             initColor();
@@ -44,12 +43,9 @@ public class Tile extends JPanel {
         switch(color){
         case WHITE :
             setBackground(Color.WHITE);
-            setForeground(new Color(200, 200, 200));
-           
             break;
         case BLACK :
-            setBackground(Color.GRAY);
-            setForeground(new Color(20, 20, 20));
+            setBackground(Color.BLACK);
             break;
         }
     }
