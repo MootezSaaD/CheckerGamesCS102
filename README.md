@@ -18,3 +18,7 @@ then execute the following command:
 ```sh
   git clone https://github.com/MootezSaaD/CheckersGameCS102.git
 ```
+## Download JAVA:
+Normally, all linux machines have installed pre-installed, if you are using a Windows machine </br>
+you can download Java from here:</br>
+https://www.java.com/fr/download/
